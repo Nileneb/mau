@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <title>Darf ich Genossin Mau streicheln? → Teile lieber unsere Suche 😊</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <link rel="canonical" href="https://mau.linn.games/pet.html">
+  <style>
+    :root{--max:860px;--bg:#0b0c10;--card:#111319;--bd:#232633;--muted:#a9b0bd;--acc:#2b6ef2;--yes:#1fa971;--no:#c23b3b}
+    *{box-sizing:border-box} body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Helvetica,Arial,sans-serif;background:var(--bg);color:#e6e6e6}
+    main{max-width:var(--max);margin:0 auto;padding:16px}
+    .card{background:var(--card);border:1px solid var(--bd);border-radius:16px;padding:18px;box-shadow:0 6px 24px rgba(0,0,0,.25)}
+    h1{font-size:clamp(22px,4vw,34px);margin:8px 0 4px}
+    h2{font-size:clamp(18px,3vw,24px);margin:12px 0 6px}
+    .muted{color:var(--muted)}
+    .btn{display:inline-block;padding:12px 16px;border-radius:12px;border:1px solid #2a2f3a;text-decoration:none;color:#e6e6e6;margin:6px 8px 6px 0}
+    .btn:hover{background:#1a1d25}.cta{background:var(--acc);border-color:var(--acc);color:#fff}
+    .yes{background:var(--yes);border-color:var(--yes);color:#001b0f}
+    .no{background:var(--no);border-color:var(--no);color:#fff}
+    .grid{display:grid;gap:12px}
+    .node{padding:16px;border:1px solid #2a2f3a;border-radius:14px;background:#0f1117}
+    .choices{display:flex;gap:10px;flex-wrap:wrap}
+    .hide{display:none}
+    textarea{width:100%;min-height:110px;padding:12px;border-radius:12px;border:1px solid #2a2f3a;background:#111319;color:#e6e6e6}
+    .center{text-align:center}
+  </style>
+</head>
+<body>
+<main class="card">
+  <h1>Darf ich Genossin Mau streicheln?</h1>
+  <p class="muted">Kurzer Reality-Check. Spoiler: <strong>Unsere samtpfotige Genossin Mau mag Abstand</strong>.<em>Teile lieber unsere Wohnungssuche</em> statt Anfassen. Danke! 💛</p>
+
+  <!-- Entscheidungsfluss -->
+  <section id="q1" class="node">
+    <h2>1) Bist du freundlich gefragt worden (Einverständnis)?</h2>
+    <div class="choices">
+      <button class="btn yes" data-next="q2">Ja</button>
+      <button class="btn no" data-next="end">Nein</button>
+    </div>
+  </section>
+
+  <section id="q2" class="node hide">
+    <h2>2) Katzensicherheit: Bist du gegen Tetanus geimpft & keine Katzenallergie?</h2>
+    <div class="choices">
+      <button class="btn yes" data-next="q3">Ja</button>
+      <button class="btn no" data-next="end">Nein</button>
+    </div>
+    <p class="muted">Hintergrund: Kratzer sind selten, aber Schutz schadet nie. Allergie = Stress für dich & unsere feinfühlige Genossin Mau.</p>
+  </section>
+
+  <section id="q3" class="node hide">
+    <h2>3) Tierwohl: Wirkt Genossin Mau gerade entspannt (Ohren/Atmung ruhig, klammert nicht)?</h2>
+    <div class="choices">
+      <button class="btn yes" data-next="q4">Ja</button>
+      <button class="btn no" data-next="end">Nein</button>
+    </div>
+  </section>
+
+  <section id="q4" class="node hide">
+    <h2>4) Umfeld: Ist es ruhig (kein Gedränge/kein Straßenlärm/keine Party)?</h2>
+    <div class="choices">
+      <button class="btn yes" data-next="q5">Ja</button>
+      <button class="btn no" data-next="end">Nein</button>
+    </div>
+  </section>
+
+  <section id="q5" class="node hide">
+    <h2>5) Hygiene: Saubere Hände & kein starkes Parfum/Handdesinfektionsgeruch?</h2>
+    <div class="choices">
+      <button class="btn yes" data-next="end-soft">Ja</button>
+      <button class="btn no" data-next="end">Nein</button>
+    </div>
+  </section>
+
+  <!-- Enden -->
+  <section id="end" class="node hide">
+    <h2>Heute lieber <span style="color:#ffcf5a">nicht</span> streicheln.</h2>
+    <p>Stattdessen hilf uns gern: <strong>Teile unsere Wohnungssuche</strong> – das bringt unserer charmanten Genossin Mau mehr als jede kraulende Hand.</p>
+    <div class="choices">
+      <a class="btn cta" href="#share">➡️ Teilen & Link kopieren</a>
+    </div>
+    <p class="muted">Warum? Unterwegs ist für Tiere Stress. Respekt + Abstand = bestes Tierwohl für unsere gelassene Genossin Mau.</p>
+  </section>
+
+  <section id="end-soft" class="node hide">
+    <h2>Theoretisch ok – praktisch heute <span style="color:#ffcf5a">Pause</span>.</h2>
+    <p>Wir trainieren „entspanntes Unterwegssein“. Darum heute ohne Anfassen. <strong>Teile stattdessen unsere Suche</strong> – hilft uns wirklich.</p>
+    <div class="choices">
+      <a class="btn cta" href="#share">➡️ Teilen & Link kopieren</a>
+    </div>
+  </section>
+
+  <!-- Share-Block -->
+  <section id="share" class="node hide">
+    <h2>Teile unsere & Genossin Maus Wohnungssuche</h2>
+    <p class="muted">Poste einfach dein eigenes Foto/Video & pack den Link dazu:</p>
+    <div class="choices">
+      <button class="btn" id="copyLink">🔗 Link kopieren</button>
+      <button class="btn" id="copyCap">📋 Caption kopieren</button>
+      <button class="btn cta" id="shareBtn">📲 Direkt teilen (Share-Sheet)</button>
+      <a class="btn" href="instagram://camera">📷 Instagram öffnen</a>
+      <a class="btn" href="https://www.instagram.com/genossin_mau/" target="_blank">📱 Instagram Profil</a>
+    </div>
+    <textarea id="cap" readonly>Berlin: 1-Zimmer bis 800 € warm gesucht. Ruhiger Mieter + versicherte Katze (Genossin Mau). Unterlagen sicher & nur auf Anfrage: mau.linn.games #wohnungberlin #vermieten #miete #katze #berlin</textarea>
+    <p class="muted center" style="margin-top:8px">Mehr Infos: <a href="/">mau.linn.games</a> · Instagram: <a href="https://www.instagram.com/genossin_mau/" target="_blank">@genossin_mau</a> · Bitte nicht anfassen – unsere wachsame Genossin Mau dankt!</p>
+  </section>
+
+  <p class="muted center" style="margin-top:10px">© Benedikt Linn · Kein Tracking, nur simple Buttons. · Aufrufe: <span id="counter">-</span></p>
+</main>
+
+<script>
+(function(){
+  // Besucherzähler
+  fetch('https://api.countapi.xyz/hit/mau.linn.games/visits')
+    .then(response => response.json())
+    .then(data => {
+      if(document.getElementById('counter')) {
+        document.getElementById('counter').textContent = data.value.toLocaleString('de-DE');
+      }
+    })
+    .catch(error => console.error('Counter error:', error));
+    
+  const show = (id)=>{ document.getElementById(id)?.classList.remove('hide'); document.getElementById(id)?.scrollIntoView({behavior:'smooth', block:'start'}); };
+  document.querySelectorAll('.node .btn').forEach(b=>{
+    const nxt = b.getAttribute('data-next');
+    if(!nxt) return;
+    b.addEventListener('click', ()=> {
+      show(nxt);
+      if(nxt.startsWith('end')) show('share');
+    });
+  });
+
+  // Share helpers
+  const LINK = (new URL(document.location)).origin; // https://mau.linn.games
+  const cap = document.getElementById('cap');
+  document.getElementById('copyLink').addEventListener('click', async ()=>{
+    try{ await navigator.clipboard.writeText(LINK); alert('Link kopiert: '+LINK); }catch(e){ alert('Bitte Link manuell kopieren: '+LINK); }
+  });
+  document.getElementById('copyCap').addEventListener('click', async ()=>{
+    try{ await navigator.clipboard.writeText(cap.value); alert('Caption kopiert'); }catch(e){ alert('Kopieren fehlgeschlagen – manuell markieren.'); }
+  });
+  document.getElementById('shareBtn').addEventListener('click', async ()=>{
+    const shareData = { text: cap.value, url: LINK };
+    try{
+      if(navigator.canShare && navigator.canShare(shareData)) { await navigator.share(shareData); }
+      else { // Fallback: nur URL öffnen/kopieren
+        await navigator.clipboard.writeText(LINK);
+        alert('Link kopiert. Öffne Instagram und füge ihn in deine Story/Bio ein.');
+      }
+    }catch(e){
+      try{ await navigator.clipboard.writeText(LINK); }catch(_){}
+      alert('Teilen abgebrochen. Link ist kopiert – bitte in Instagram einfügen.');
+    }
+  });
+
+  // Startzustand sichtbar
+  document.getElementById('q1').classList.remove('hide');
+})();
+</script>
+</body>
+</html>

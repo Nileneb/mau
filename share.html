@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <title>Teilen – Benedikt & Genossin Mau</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <link rel="canonical" href="https://mau.linn.games/share">
+  <style>
+    :root{--max:860px;--bg:#0b0c10;--card:#111319;--bd:#232633;--muted:#a9b0bd;--acc:#2b6ef2}
+    *{box-sizing:border-box} body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Helvetica,Arial,sans-serif;background:var(--bg);color:#e6e6e6}
+    main{max-width:var(--max);margin:0 auto;padding:16px}
+    .card{background:var(--card);border:1px solid var(--bd);border-radius:16px;padding:16px;box-shadow:0 6px 24px rgba(0,0,0,.25)}
+    h1{font-size:clamp(22px,4vw,34px);margin:8px 0 4px}
+    .btn{display:inline-block;padding:12px 16px;border-radius:12px;border:1px solid #2a2f3a;text-decoration:none;color:#e6e6e6;margin:6px 8px 6px 0}
+    .btn:hover{background:#1a1d25}.cta{background:var(--acc);border-color:var(--acc);color:#fff}
+    .muted{color:var(--muted)}
+    .grid{display:grid;gap:12px} @media(min-width:720px){.grid{grid-template-columns:1fr 1fr}}
+    .preview{width:100%;border-radius:12px;border:1px solid #2a2f3a}
+    textarea{width:100%;min-height:110px;padding:12px;border-radius:12px;border:1px solid #2a2f3a;background:#111319;color:#e6e6e6}
+    small a{color:#9cb6ff}
+  </style>
+</head>
+<body>
+<main class="card">
+  <h1>Teile unsere Suche – danke! 🙏</h1>
+  <p class="muted">Foto gern, aber bitte <strong>nicht anfassen</strong> – Mau bleibt so entspannter.</p>
+
+  <div class="grid" style="margin-top:8px">
+    <section>
+      <img class="preview" src="/story-1080x1920.jpg" alt="Story-Motiv: Wohnung gesucht – Benedikt & Genossin Mau">
+      <div style="margin-top:10px">
+        <a class="btn" download href="/story-1080x1920.jpg">⬇️ Story-Bild (1080×1920)</a>
+        <a class="btn" download href="/post-1080x1080.jpg">⬇️ Quadrat (1080×1080)</a>
+        <button class="btn cta" id="shareBtn">📲 Direkt teilen (Share-Sheet)</button>
+        <a class="btn" href="instagram://camera">📷 Instagram Kamera öffnen</a>
+        <a class="btn" href="instagram://story-camera">📷 IG Story-Kamera (Try)</a>
+        <a class="btn" href="https://www.instagram.com/genossin_mau/" target="_blank">📱 Profil @genossin_mau</a>
+      </div>
+    </section>
+
+    <section>
+      <p class="muted">Caption/Hashtags kopieren, dann in Instagram einfügen:</p>
+      <textarea id="cap" readonly>
+Berlin: 1-Zimmer bis 800 € warm gesucht.
+Ruhiger Mieter + versicherte Katze (Genossin Mau). Unterlagen nur auf Anfrage: mau.linn.games
+Bitte nicht anfassen – danke fürs Teilen!
+
+#wohnungberlin #vermieten #miete #katze #nachbarschaftshilfe #berlin #wgsgesucht #immo
+      </textarea>
+      <div style="margin-top:10px">
+        <button class="btn" id="copyBtn">📋 Caption kopieren</button>
+        <a class="btn" href="https://twitter.com/intent/tweet?text=Wohnung%20gesucht%20in%20Berlin%20%E2%80%93%201-Zimmer%20bis%20800%E2%82%AC%20warm.%20mau.linn.games">X/Twitter</a>
+        <a class="btn" href="https://t.me/share/url?url=https://mau.linn.games&text=Wohnung%20gesucht%20in%20Berlin%20%E2%80%93%20mau.linn.games">Telegram</a>
+        <a class="btn" href="https://wa.me/?text=Wohnung%20gesucht%20in%20Berlin%20%E2%80%93%20mau.linn.games">WhatsApp</a>
+        <a class="btn" href="https://www.facebook.com/sharer/sharer.php?u=https://mau.linn.games">Facebook</a>
+      </div>
+      <p class="muted" style="margin-top:6px">
+        Hinweis: Instagram erlaubt <em>keine</em> vorbefüllten Posts per Link. Mit dem Button „Direkt teilen" öffnet das System-Share-Sheet (falls vom Browser unterstützt).
+      </p>
+    </section>
+  </div>
+
+  <p class="muted" style="margin-top:12px">
+    Mehr Infos & Kontakt: <a href="/">mau.linn.games</a> · Instagram: <a href="https://www.instagram.com/genossin_mau/" target="_blank">@genossin_mau</a> · Aufrufe: <span id="counter">-</span>
+  </p>
+</main>
+
+<script>
+(async function(){
+  // Besucherzähler
+  fetch('https://api.countapi.xyz/hit/mau.linn.games/visits')
+    .then(response => response.json())
+    .then(data => {
+      if(document.getElementById('counter')) {
+        document.getElementById('counter').textContent = data.value.toLocaleString('de-DE');
+      }
+    })
+    .catch(error => console.error('Counter error:', error));
+  const shareBtn = document.getElementById('shareBtn');
+  const copyBtn  = document.getElementById('copyBtn');
+  const cap      = document.getElementById('cap');
+
+  copyBtn.addEventListener('click', async () => {
+    try {
+      await navigator.clipboard.writeText(cap.value);
+      copyBtn.textContent = "✅ Kopiert";
+      setTimeout(()=>copyBtn.textContent="📋 Caption kopieren", 1500);
+    } catch(e){ alert("Konnte nicht kopieren. Bitte manuell markieren."); }
+  });
+
+  // Web Share API v2: teilt Datei + Text (iOS Safari/Android Chrome)
+  shareBtn.addEventListener('click', async () => {
+    try {
+      if (!navigator.canShare) throw new Error("No share API");
+      // Lade die Story-Grafik als File
+      const res = await fetch('/story-1080x1920.jpg');
+      const blob = await res.blob();
+      const file = new File([blob], 'mau-story.jpg', { type: 'image/jpeg' });
+      const shareData = {
+        text: cap.value.trim(),
+        url: 'https://mau.linn.games',
+        files: [file]
+      };
+      if (navigator.canShare(shareData)) {
+        await navigator.share(shareData);
+      } else {
+        window.location.href = 'instagram://camera';
+      }
+    } catch(e){
+      // Fallback: Datei herunterladen, Kamera öffnen
+      const a = document.createElement('a');
+      a.href = '/story-1080x1920.jpg';
+      a.download = 'mau-story.jpg';
+      document.body.appendChild(a); a.click(); a.remove();
+      window.location.href = 'instagram://camera';
+    }
+  });
+})();
+</script>
+</body>
+</html>
