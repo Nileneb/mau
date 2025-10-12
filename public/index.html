@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Mau · Cat-Campaign · Big Berlin Hack</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="I am Mau, the city cat. Scan my QR and support our open-source hack: sonic-tooth-scribe." />
+
+  <!-- OG / Twitter -->
+  <meta property="og:title" content="Mau · Cat-Campaign" />
+  <meta property="og:description" content="I am Mau, the city cat. Scan my QR and support our open-source hack." />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="/og-preview.png" />
+  <meta property="og:url" content="https://mau.linn.games/" />
+  <meta name="twitter:card" content="summary_large_image" />
+
+  <link rel="icon" href="/favicon.ico" />
+  <link rel="preconnect" href="https://avatars.githubusercontent.com" />
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <header class="wrap">
+    <div class="logo">🐾 Mau</div>
+    <nav>
+      <a href="#about">About</a>
+      <a href="#qr">QR Flow</a>
+      <a href="#hack">Hackathon</a>
+      <a href="#repo">GitHub</a>
+      <a href="#team">Team</a>
+      <a href="#legal">Legal</a>
+    </nav>
+  </header>
+
+  <main class="wrap">
+    <!-- HERO -->
+    <section class="hero">
+      <h1>Hi human, I’m Mau — Berlin’s roaming cat.</h1>
+      <p class="lead">
+        You scanned my QR because you have taste. Help my humans win the Big Berlin Hack:
+        <strong>sonic-tooth-scribe</strong> — voice-powered dental charts for real clinics.
+      </p>
+      <div class="cta-row">
+        <a class="btn primary" href="#repo">⭐ Star the repo</a>
+        <a class="btn ghost" href="#hack">Learn the plan</a>
+      </div>
+    </section>
+
+    <!-- ABOUT CAT-CAMPAIGN -->
+    <section id="about" class="card">
+      <h2>What’s this “Cat-Campaign”?</h2>
+      <p>
+        I’m the messenger with whiskers. My QR sends curious humans here. In return, you nudge an
+        open-source healthcare tool forward. Minimal ads, zero fluff — just impact.
+      </p>
+      <ul class="bullets">
+        <li>All copy from my feline perspective. Yes, I judge your socks.</li>
+        <li>One clear goal: highlight the <em>sonic-tooth-scribe</em> project.</li>
+        <li>Berlin streets → QR → stars, forks, and contributors.</li>
+      </ul>
+    </section>
+
+    <!-- QR FLOW -->
+    <section id="qr" class="card">
+      <h2>QR Flow — Pet the Cat?</h2>
+      <p>I ask, you decide. Consent and hygiene, human.</p>
+
+      <div id="qr-flow" class="flow">
+        <div class="flow-step active" data-step="1">
+          <p><strong>Do you want to pet me?</strong></p>
+          <div class="flow-actions">
+            <button class="btn primary" data-next="2">Yes</button>
+            <button class="btn ghost" data-next="end">No</button>
+          </div>
+        </div>
+
+        <div class="flow-step" data-step="2">
+          <p><strong>Tetanus shot up-to-date?</strong></p>
+          <div class="flow-actions">
+            <button class="btn primary" data-next="3">Yes</button>
+            <button class="btn ghost" data-next="end">No</button>
+          </div>
+        </div>
+
+        <div class="flow-step" data-step="3">
+          <p><strong>Gentle hands and no tail pulling?</strong></p>
+          <div class="flow-actions">
+            <button class="btn primary" data-next="ok">Yes</button>
+            <button class="btn ghost" data-next="end">No</button>
+          </div>
+        </div>
+
+        <div class="flow-step" data-step="ok">
+          <p class="ok">Approved. One (1) head scratch permitted. Wash hands. Then ⭐ the repo.</p>
+          <a class="btn primary" href="#repo">Go star</a>
+        </div>
+
+        <div class="flow-step" data-step="end">
+          <p class="warn">Wise choice. Observe me from a respectful distance and still ⭐ the repo.</p>
+          <a class="btn ghost" href="#repo">Support anyway</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- HACKATHON -->
+    <section id="hack" class="card">
+      <h2>Big Berlin Hack · Why I care</h2>
+      <p>
+        My humans are building <strong>sonic-tooth-scribe</strong>: speech-to-structure for dental findings,
+        integrated with n8n, Supabase and OpenAI. It saves time, reduces errors, and actually ships.
+      </p>
+      <ul class="bullets">
+        <li>Voice → Whisper → structured JSON for each tooth.</li>
+        <li>Rules enforced: <code>missing</code>, <code>root_canal_needed</code>, <code>cavity</code>,
+            <code>crown</code>, <code>filling</code>, <code>healthy</code>.</li>
+        <li>Automation via n8n; storage and auth via Supabase.</li>
+      </ul>
+      <div class="cta-row">
+        <a class="btn primary" href="https://luma.com/big-berlin-hack" target="_blank" rel="noopener">Hackathon Info</a>
+        <a class="btn ghost" href="#repo">See the code</a>
+      </div>
+    </section>
+
+    <!-- REPO SHOWCASE -->
+    <section id="repo" class="card">
+      <h2>GitHub · sonic-tooth-scribe</h2>
+      <p>
+        If this helps clinics, give us a star. I get extra treats per ⭐ — scientifically verified*.
+        <small>*by me.</small>
+      </p>
+
+      <div id="repo-stats" class="repo">
+        <div class="repo-left">
+          <a id="repo-link" href="https://github.com/jurecerkez-code/sonic-tooth-scribe" target="_blank" rel="noopener">
+            github.com/jurecerkez-code/sonic-tooth-scribe
+          </a>
+          <p id="repo-desc">Loading description…</p>
+          <div class="chips">
+            <span id="chip-stars" class="chip">⭐ 0</span>
+            <span id="chip-forks" class="chip">🍴 0</span>
+            <span id="chip-issues" class="chip">❗ 0</span>
+            <span id="chip-license" class="chip">📝 —</span>
+          </div>
+          <small id="repo-updated">Updated: —</small>
+        </div>
+      </div>
+
+      <div class="cta-row">
+        <a class="btn primary" target="_blank" rel="noopener"
+           href="https://github.com/jurecerkez-code/sonic-tooth-scribe">⭐ Star on GitHub</a>
+        <a class="btn ghost" target="_blank" rel="noopener"
+           href="https://github.com/jurecerkez-code/sonic-tooth-scribe/fork">Fork</a>
+      </div>
+    </section>
+
+    <!-- TEAM -->
+    <section id="team" class="card">
+      <h2>Humans I tolerate</h2>
+      <ul class="people">
+        <li>
+          <img src="https://avatars.githubusercontent.com/u/155598427?v=4" alt="jurecerkez-code" />
+          <a href="https://github.com/jurecerkez-code" target="_blank" rel="noopener">jurecerkez-code</a>
+        </li>
+        <li>
+          <img src="https://avatars.githubusercontent.com/u/14183194?v=4" alt="nileneb" />
+          <a href="https://github.com/nileneb" target="_blank" rel="noopener">nileneb</a>
+        </li>
+      </ul>
+    </section>
+
+    <!-- LEGAL -->
+    <section id="legal" class="card">
+      <h2>Legal (DE)</h2>
+      <ul class="links">
+        <li><a href="https://www.linn.games/pages/Impressum.html" target="_blank" rel="noopener">Impressum</a></li>
+        <li><a href="https://www.linn.games/pages/dsgvo.html" target="_blank" rel="noopener">Datenschutz</a></li>
+        <li><a href="mailto:info@linn.games">info@linn.games</a></li>
+      </ul>
+    </section>
+  </main>
+
+  <footer class="wrap foot">
+    <span>© <span id="year"></span> Mau · All naps reserved.</span>
+    <a href="https://mau.linn.games" class="muted">mau.linn.games</a>
+  </footer>
+
+  <script src="/script.js" defer></script>
+</body>
+</html>
