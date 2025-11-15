@@ -2,13 +2,19 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <title>Mau · Cat-Campaign · Big Berlin Hack</title>
+  <title>Mau · Cat-Campaign · Snap & Tag @genossin_mau</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="description" content="I am Mau, the city cat. Scan my QR and support our open-source hack: sonic-tooth-scribe." />
+  <meta
+    name="description"
+    content="I am Mau, Berlin’s roaming cat mascot. Scan my QR, snap a picture, upload it, tag @genossin_mau on Instagram and discover my humans’ website work."
+  />
 
   <!-- OG / Twitter -->
   <meta property="og:title" content="Mau · Cat-Campaign" />
-  <meta property="og:description" content="I am Mau, the city cat. Scan my QR and support our open-source hack." />
+  <meta
+    property="og:description"
+    content="Scan my QR, upload a picture, tag @genossin_mau on Instagram and discover my humans’ websites and projects."
+  />
   <meta property="og:type" content="website" />
   <meta property="og:image" content="/og-preview.png" />
   <meta property="og:url" content="https://mau.linn.games/" />
@@ -23,8 +29,9 @@
     <div class="logo">🐾 Mau</div>
     <nav>
       <a href="#about">About</a>
-      <a href="#qr">QR Flow</a>
-      <a href="#hack">Hackathon</a>
+      <a href="#qr">Touch-me flow</a>
+      <a href="#instagram">Instagram</a>
+      <a href="#website">Website need?</a>
       <a href="#repo">GitHub</a>
       <a href="#team">Team</a>
       <a href="#legal">Legal</a>
@@ -34,103 +41,172 @@
   <main class="wrap">
     <!-- HERO -->
     <section class="hero">
-      <h1>Hi human, I’m Mau — Berlin’s roaming cat.</h1>
+      <h1>Hi human, I’m Mau — Berlin’s roaming cat mascot.</h1>
       <p class="lead">
-        You scanned my QR because you have taste. Help my humans win the Big Berlin Hack:
-        <strong>sonic-tooth-scribe</strong> — voice-powered dental charts for real clinics.
+        You scanned my QR because you have taste. Here is the deal:
+        snap a picture, upload it, tag <strong>@genossin_mau</strong> on Instagram
+        and check out what my humans build — playful websites, small games and
+        weird cat funnels like this one.
       </p>
       <div class="cta-row">
-        <a class="btn primary" href="#repo">⭐ Star the repo</a>
-        <a class="btn ghost" href="#hack">Learn the plan</a>
+        <a
+          class="btn primary"
+          href="https://www.instagram.com/genossin_mau"
+          target="_blank"
+          rel="noopener"
+        >
+          📸 Open Instagram &amp; tag @genossin_mau
+        </a>
+        <a class="btn ghost" href="#website">
+          💻 “Website need?” – talk to my humans
+        </a>
+        <a class="btn ghost" href="#qr">
+          🙅 No touch – see the flow
+        </a>
       </div>
     </section>
 
     <!-- ABOUT CAT-CAMPAIGN -->
     <section id="about" class="card">
-      <h2>What’s this “Cat-Campaign”?</h2>
+      <h2>What is this cat-campaign?</h2>
       <p>
-        I’m the messenger with whiskers. My QR sends curious humans here. In return, you nudge an
-        open-source healthcare tool forward. Minimal ads, zero fluff — just impact.
+        I’m the QR cat. You find me on backpacks, stickers and random Berlin corners.
+        Scanning my code drops you here – no pop-ups, no shady tracking walls – just a
+        fun funnel into my humans’ work.
       </p>
       <ul class="bullets">
-        <li>All copy from my feline perspective. Yes, I judge your socks.</li>
-        <li>One clear goal: highlight the <em>sonic-tooth-scribe</em> project.</li>
-        <li>Berlin streets → QR → stars, forks, and contributors.</li>
+        <li>Street cat mascot, real-world QR → this tiny landing page.</li>
+        <li>One clear mission: snap, upload, tag <code>@genossin_mau</code>.</li>
+        <li>Bonus mission: discover the websites and experiments built by my humans.</li>
       </ul>
     </section>
 
-    <!-- QR FLOW -->
+    <!-- QR FLOW – ALWAYS ENDS IN “NO TOUCH” -->
     <section id="qr" class="card">
-      <h2>QR Flow — Pet the Cat?</h2>
-      <p>I ask, you decide. Consent and hygiene, human.</p>
+      <h2>“Touch-me” question flow (always “no touch”)</h2>
+      <p>
+        I am a street cat. For my safety (and your hygiene) the answer is always:
+        <strong>do not touch me in real life</strong>. The flow just makes that crystal clear.
+      </p>
 
       <div id="qr-flow" class="flow">
+        <!-- STEP 1 -->
         <div class="flow-step active" data-step="1">
-          <p><strong>Do you want to pet me?</strong></p>
+          <p><strong>Do you want to pet me in real life?</strong></p>
           <div class="flow-actions">
-            <button class="btn primary" data-next="2">Yes</button>
-            <button class="btn ghost" data-next="end">No</button>
+            <button class="btn primary" data-next="end">
+              I respect your boundaries 🧼
+            </button>
+            <button class="btn ghost" data-next="end">
+              I really want to… but I’ll behave 🙅
+            </button>
           </div>
         </div>
 
-        <div class="flow-step" data-step="2">
-          <p><strong>Tetanus shot up-to-date?</strong></p>
-          <div class="flow-actions">
-            <button class="btn primary" data-next="3">Yes</button>
-            <button class="btn ghost" data-next="end">No</button>
-          </div>
-        </div>
-
-        <div class="flow-step" data-step="3">
-          <p><strong>Gentle hands and no tail pulling?</strong></p>
-          <div class="flow-actions">
-            <button class="btn primary" data-next="ok">Yes</button>
-            <button class="btn ghost" data-next="end">No</button>
-          </div>
-        </div>
-
-        <div class="flow-step" data-step="ok">
-          <p class="ok">Approved. One (1) head scratch permitted. Wash hands. Then ⭐ the repo.</p>
-          <a class="btn primary" href="#repo">Go star</a>
-        </div>
-
+        <!-- FINAL STEP: ALWAYS NO TOUCH -->
         <div class="flow-step" data-step="end">
-          <p class="warn">Wise choice. Observe me from a respectful distance and still ⭐ the repo.</p>
-          <a class="btn ghost" href="#repo">Support anyway</a>
+          <p class="warn">
+            Thank you. <strong>No real-life touching.</strong> Observe me from a respectful
+            distance, then:
+          </p>
+          <ul class="bullets">
+            <li>Snap a picture of the cat, QR or backpack.</li>
+            <li>Upload it to your story or post.</li>
+            <li>Tag <code>@genossin_mau</code> on Instagram.</li>
+          </ul>
+          <div class="flow-actions" style="margin-top:0.8rem;">
+            <a
+              class="btn primary"
+              href="https://www.instagram.com/genossin_mau"
+              target="_blank"
+              rel="noopener"
+            >
+              📲 Upload &amp; tag @genossin_mau
+            </a>
+            <a class="btn ghost" href="#website">
+              💻 Need a website? Click here
+            </a>
+          </div>
         </div>
       </div>
     </section>
 
-    <!-- HACKATHON -->
-    <section id="hack" class="card">
-      <h2>Big Berlin Hack · Why I care</h2>
+    <!-- INSTAGRAM TAG SECTION -->
+    <section id="instagram" class="card">
+      <h2>Instagram mission: snap · upload · tag</h2>
       <p>
-        My humans are building <strong>sonic-tooth-scribe</strong>: speech-to-structure for dental findings,
-        integrated with n8n, Supabase and OpenAI. It saves time, reduces errors, and actually ships.
+        If you see me in the wild, you are part of the campaign now.
+        Here is exactly what to do:
+      </p>
+      <ol class="bullets" style="list-style:decimal; padding-left:1.2rem;">
+        <li>Take a picture of Mau, the QR-code or the backpack / sticker.</li>
+        <li>Open Instagram and create a story or post.</li>
+        <li>Tag <code>@genossin_mau</code> so I can find your creation.</li>
+        <li>
+          Optional: mention <code>@linn.games</code> if you like the idea of cat-driven tech marketing.
+        </li>
+      </ol>
+      <p style="margin-top:0.8rem;">
+        Handle:
+        <a
+          href="https://www.instagram.com/genossin_mau"
+          target="_blank"
+          rel="noopener"
+          style="font-weight:700; text-decoration:none; color:#e9e9ee;"
+        >
+          @genossin_mau
+        </a>
+      </p>
+    </section>
+
+    <!-- WEBSITE NEED PROMO -->
+    <section id="website" class="card">
+      <h2>“Website need?” – let my humans build it</h2>
+      <p>
+        You like the idea of QR cats, small interactive pages and playful flows?
+        That’s literally what my humans do: compact, fast websites and prototypes
+        for people and small businesses that want something a bit different.
       </p>
       <ul class="bullets">
-        <li>Voice → Whisper → structured JSON for each tooth.</li>
-        <li>Rules enforced: <code>missing</code>, <code>root_canal_needed</code>, <code>cavity</code>,
-            <code>crown</code>, <code>filling</code>, <code>healthy</code>.</li>
-        <li>Automation via n8n; storage and auth via Supabase.</li>
+        <li>Landing pages, portfolios and small sites that actually load fast.</li>
+        <li>Fun concepts with WebGL / Web games when it makes sense.</li>
+        <li>Clean, privacy-conscious setups – no 30 pop-ups before content.</li>
       </ul>
-      <div class="cta-row">
-        <a class="btn primary" href="https://luma.com/big-berlin-hack" target="_blank" rel="noopener">Hackathon Info</a>
-        <a class="btn ghost" href="#repo">See the code</a>
+      <div class="cta-row" style="margin-top:0.8rem;">
+        <a
+          class="btn primary"
+          href="https://www.linn.games"
+          target="_blank"
+          rel="noopener"
+        >
+          🌐 Visit linn.games
+        </a>
+        <a
+          class="btn ghost"
+          href="mailto:info@linn.games?subject=Website%20need%20from%20Mau%20QR"
+        >
+          ✉️ Email: info@linn.games
+        </a>
       </div>
     </section>
 
-    <!-- REPO SHOWCASE -->
+    <!-- REPO SHOWCASE (SIDE PROJECT) -->
     <section id="repo" class="card">
-      <h2>GitHub · sonic-tooth-scribe</h2>
+      <h2>Side project · sonic-tooth-scribe</h2>
       <p>
-        If this helps clinics, give us a star. I get extra treats per ⭐ — scientifically verified*.
-        <small>*by me.</small>
+        One of the open-source projects my humans work on:
+        <strong>sonic-tooth-scribe</strong> – a tiny voice-to-JSON helper
+        for dental findings. If you are into health-tech or automation, give it a star.
       </p>
 
       <div id="repo-stats" class="repo">
         <div class="repo-left">
-          <a id="repo-link" href="https://github.com/jurecerkez-code/sonic-tooth-scribe" target="_blank" rel="noopener">
+          <a
+            id="repo-link"
+            href="https://github.com/jurecerkez-code/sonic-tooth-scribe"
+            target="_blank"
+            rel="noopener"
+          >
             github.com/jurecerkez-code/sonic-tooth-scribe
           </a>
           <p id="repo-desc">Loading description…</p>
@@ -145,24 +221,54 @@
       </div>
 
       <div class="cta-row">
-        <a class="btn primary" target="_blank" rel="noopener"
-           href="https://github.com/jurecerkez-code/sonic-tooth-scribe">⭐ Star on GitHub</a>
-        <a class="btn ghost" target="_blank" rel="noopener"
-           href="https://github.com/jurecerkez-code/sonic-tooth-scribe/fork">Fork</a>
+        <a
+          class="btn primary"
+          target="_blank"
+          rel="noopener"
+          href="https://github.com/jurecerkez-code/sonic-tooth-scribe"
+        >
+          ⭐ Star on GitHub
+        </a>
+        <a
+          class="btn ghost"
+          target="_blank"
+          rel="noopener"
+          href="https://github.com/jurecerkez-code/sonic-tooth-scribe/fork"
+        >
+          🍴 Fork
+        </a>
       </div>
     </section>
 
     <!-- TEAM -->
     <section id="team" class="card">
-      <h2>Humans I tolerate</h2>
+      <h2>Humans behind the cat</h2>
       <ul class="people">
         <li>
-          <img src="https://avatars.githubusercontent.com/u/155598427?v=4" alt="jurecerkez-code" />
-          <a href="https://github.com/jurecerkez-code" target="_blank" rel="noopener">jurecerkez-code</a>
+          <img
+            src="https://avatars.githubusercontent.com/u/155598427?v=4"
+            alt="jurecerkez-code"
+          />
+          <a
+            href="https://github.com/jurecerkez-code"
+            target="_blank"
+            rel="noopener"
+          >
+            jurecerkez-code
+          </a>
         </li>
         <li>
-          <img src="https://avatars.githubusercontent.com/u/14183194?v=4" alt="nileneb" />
-          <a href="https://github.com/nileneb" target="_blank" rel="noopener">nileneb</a>
+          <img
+            src="https://avatars.githubusercontent.com/u/14183194?v=4"
+            alt="nileneb"
+          />
+          <a
+            href="https://github.com/nileneb"
+            target="_blank"
+            rel="noopener"
+          >
+            nileneb
+          </a>
         </li>
       </ul>
     </section>
@@ -171,8 +277,24 @@
     <section id="legal" class="card">
       <h2>Legal (DE)</h2>
       <ul class="links">
-        <li><a href="https://www.linn.games/pages/Impressum.html" target="_blank" rel="noopener">Impressum</a></li>
-        <li><a href="https://www.linn.games/pages/dsgvo.html" target="_blank" rel="noopener">Datenschutz</a></li>
+        <li>
+          <a
+            href="https://www.linn.games/pages/Impressum.html"
+            target="_blank"
+            rel="noopener"
+          >
+            Impressum
+          </a>
+        </li>
+        <li>
+          <a
+            href="https://www.linn.games/pages/dsgvo.html"
+            target="_blank"
+            rel="noopener"
+          >
+            Datenschutz
+          </a>
+        </li>
         <li><a href="mailto:info@linn.games">info@linn.games</a></li>
       </ul>
     </section>
