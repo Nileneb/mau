@@ -3,12 +3,40 @@ import helmet from "helmet";
 import compression from "compression";
 import morgan from "morgan";
 import fetch from "node-fetch";
+import fs from "fs";
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 const GITHUB_REPO = "jurecerkez-code/sonic-tooth-scribe";
 const GITHUB_API = `https://api.github.com/repos/${GITHUB_REPO}`;
 const GITHUB_TOKEN = process.env.GITHUB_TOKEN || null;
+
+// === Simple pageview counter (file-based, no cookies) ===
+const COUNTER_FILE = process.env.COUNTER_FILE || "./counter.json";
+let visitCount = 0;
+
+try {
+  const raw = fs.readFileSync(COUNTER_FILE, "utf8");
+  visitCount = JSON.parse(raw).visits ?? 0;
+  // eslint-disable-next-line no-console
+  console.log(`[counter] Loaded ${visitCount} visits from ${COUNTER_FILE}`);
+} catch (e) {
+  visitCount = 0;
+  // eslint-disable-next-line no-console
+  console.log(`[counter] No existing counter file, starting at 0`);
+}
+
+function persistCounter() {
+  fs.writeFile(
+    COUNTER_FILE,
+    JSON.stringify({ visits: visitCount }),
+    (err) => {
+      if (err) {
+        console.error("[counter] Failed to write counter file:", err);
+      }
+    }
+  );
+}
 
 // Basic security headers
 app.use(
@@ -18,7 +46,7 @@ app.use(
       directives: {
         "default-src": ["'self'"],
         "img-src": ["'self'", "data:", "https://avatars.githubusercontent.com"],
-        "style-src": ["'self'", "'unsafe-inline'"], // inline CSS for simplicity
+        "style-src": ["'self'", "'unsafe-inline'"],
         "script-src": ["'self'"]
       }
     },
@@ -32,8 +60,17 @@ app.use(morgan(process.env.NODE_ENV === "production" ? "combined" : "dev"));
 // Static
 app.use(express.static("public", { maxAge: "1h", etag: true }));
 
-// Simple health endpoint
+// Health endpoint
 app.get("/health", (_req, res) => res.json({ status: "ok" }));
+
+// === Visitor counter API ===
+// Wird von der Startseite einmal bei Load aufgerufen.
+// Keine Cookies, keine IDs → reine anonyme Pageviews.
+app.get("/api/hit", (_req, res) => {
+  visitCount++;
+  persistCounter();
+  res.json({ visits: visitCount });
+});
 
 // In-memory cache for GitHub data (10 minutes)
 let cache = { ts: 0, data: null };
@@ -73,7 +110,7 @@ app.get("/api/github", async (_req, res) => {
   }
 });
 
-// Fallback to index.html (single-page style routing, if needed)
+// Fallback to index.html (SPA-style)
 app.get("*", (_req, res) => {
   res.sendFile(process.cwd() + "/public/index.html");
 });

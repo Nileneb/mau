@@ -30,3 +30,19 @@ async function loadRepo() {
   }
 }
 loadRepo();
+
+// Visitor counter
+async function countVisit() {
+  try {
+    const r = await fetch("/api/hit");
+    if (!r.ok) return;
+    const d = await r.json();
+    const el = document.getElementById("visit-counter");
+    if (el && typeof d.visits === "number") {
+      el.textContent = d.visits.toLocaleString("de-DE");
+    }
+  } catch (e) {
+    console.error("visit counter failed", e);
+  }
+}
+countVisit();
