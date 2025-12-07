@@ -7,7 +7,7 @@ import fs from "fs";
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-const GITHUB_REPO = "jurecerkez-code/sonic-tooth-scribe";
+const GITHUB_REPO = "habibidani/axia";
 const GITHUB_API = `https://api.github.com/repos/${GITHUB_REPO}`;
 const GITHUB_TOKEN = process.env.GITHUB_TOKEN || null;
 
