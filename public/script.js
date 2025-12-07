@@ -643,4 +643,445 @@
     console.log('%c🐾 Mau says hi!', 'font-size: 24px; font-weight: bold; color: #ff6b6b;');
     console.log('%cBuilt with ❤️ by nileneb', 'font-size: 12px; color: #a0a0b0;');
 
+    // ============================================
+    // MAU MEMORY GAME
+    // ============================================
+
+    class MauMemoryGame {
+        constructor() {
+            this.grid = $('#memory-grid');
+            this.startScreen = $('#memory-start');
+            this.playingScreen = $('#memory-playing');
+            this.winScreen = $('#memory-win');
+            this.startBtn = $('#memory-start-btn');
+            this.restartBtn = $('#memory-restart-btn');
+            this.movesDisplay = $('#memory-moves');
+            this.timeDisplay = $('#memory-time');
+            this.pairsDisplay = $('#memory-pairs');
+            this.finalMoves = $('#final-moves');
+            this.finalTime = $('#final-time');
+
+            if (!this.grid) return;
+
+            this.cards = [];
+            this.flippedCards = [];
+            this.matchedPairs = 0;
+            this.moves = 0;
+            this.timer = null;
+            this.seconds = 0;
+            this.isLocked = false;
+            this.totalPairs = 0;
+
+            // Cat images from the folder (select best ones)
+            this.catImages = [
+                '/images/cat/20231105_001500.jpg',
+                '/images/cat/20231114_233701.jpg',
+                '/images/cat/20231126_163755.jpg',
+                '/images/cat/20231205_175638.jpg',
+                '/images/cat/20231209_201837.jpg',
+                '/images/cat/20231222_172837.jpg',
+                '/images/cat/20240117_112755.jpg',
+                '/images/cat/20240124_163823.jpg',
+                '/images/cat/20240222_192036.jpg',
+                '/images/cat/20240304_144949.jpg',
+                '/images/cat/20240316_103329.jpg',
+                '/images/cat/20240414_120132.jpg',
+                '/images/cat/20240519_192033.jpg',
+                '/images/cat/20240613_234035.jpg',
+                '/images/cat/20250620_154207.jpg',
+                '/images/cat/20250729_152016.jpg',
+                '/images/cat/20250831_172119.jpg',
+                '/images/cat/20250921_194715.jpg',
+                '/images/cat/20250928_120219.jpg',
+                '/images/cat/20251005_125008.jpg',
+                '/images/cat/20251019_050808.jpg',
+                '/images/cat/20251112_130320.jpg',
+                '/images/cat/20251124_233511.jpg',
+                '/images/cat/20251202_210139.jpg',
+            ];
+
+            // Special icon cards
+            this.specialCards = [
+                { type: 'icon', content: '🙅', id: 'no-touch' },
+                { type: 'icon', content: '💻', id: 'website' },
+            ];
+
+            this.init();
+        }
+
+        init() {
+            if (this.startBtn) {
+                this.startBtn.addEventListener('click', () => this.startGame());
+            }
+            if (this.restartBtn) {
+                this.restartBtn.addEventListener('click', () => this.restartGame());
+            }
+        }
+
+        isMobile() {
+            return window.innerWidth < 600;
+        }
+
+        getPairCount() {
+            // Mobile: 6 pairs (3x4 = 12 cards), Desktop: 8 pairs (4x4 = 16 cards)
+            return this.isMobile() ? 6 : 8;
+        }
+
+        shuffleArray(array) {
+            const shuffled = [...array];
+            for (let i = shuffled.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+            }
+            return shuffled;
+        }
+
+        generateCards() {
+            const pairCount = this.getPairCount();
+            this.totalPairs = pairCount;
+
+            // Shuffle and pick random cat images
+            const shuffledImages = this.shuffleArray(this.catImages);
+            const selectedImages = shuffledImages.slice(0, pairCount - 1); // Leave room for 1 special card
+
+            // Create card data
+            let cardData = [];
+
+            // Add cat image pairs
+            selectedImages.forEach((img, index) => {
+                cardData.push({ type: 'image', content: img, pairId: `cat-${index}` });
+                cardData.push({ type: 'image', content: img, pairId: `cat-${index}` });
+            });
+
+            // Add one special "no touch" pair
+            cardData.push({ type: 'icon', content: '🙅', pairId: 'no-touch' });
+            cardData.push({ type: 'icon', content: '🙅', pairId: 'no-touch' });
+
+            // Shuffle all cards
+            return this.shuffleArray(cardData);
+        }
+
+        createCardElement(cardData, index) {
+            const card = document.createElement('div');
+            card.className = 'memory-card';
+            card.dataset.index = index;
+            card.dataset.pairId = cardData.pairId;
+
+            const inner = document.createElement('div');
+            inner.className = 'memory-card-inner';
+
+            const back = document.createElement('div');
+            back.className = 'memory-card-face memory-card-back';
+
+            const front = document.createElement('div');
+            front.className = 'memory-card-face memory-card-front';
+
+            if (cardData.type === 'image') {
+                const img = document.createElement('img');
+                img.src = cardData.content;
+                img.alt = 'Mau the cat';
+                img.loading = 'lazy';
+                front.appendChild(img);
+            } else {
+                front.classList.add('icon-card');
+                front.textContent = cardData.content;
+            }
+
+            inner.appendChild(back);
+            inner.appendChild(front);
+            card.appendChild(inner);
+
+            card.addEventListener('click', () => this.flipCard(card));
+
+            return card;
+        }
+
+        startGame() {
+            this.resetGame();
+            this.showScreen('playing');
+
+            // Generate and render cards
+            const cardData = this.generateCards();
+            this.grid.innerHTML = '';
+
+            cardData.forEach((data, index) => {
+                const cardEl = this.createCardElement(data, index);
+                this.cards.push(cardEl);
+                this.grid.appendChild(cardEl);
+            });
+
+            // Update pairs display
+            this.updateDisplay();
+
+            // Optional: Show all cards briefly
+            this.previewCards();
+        }
+
+        previewCards() {
+            this.isLocked = true;
+
+            // Flip all cards face up
+            this.cards.forEach(card => card.classList.add('flipped'));
+
+            // Flip them back after 1.5 seconds
+            setTimeout(() => {
+                this.cards.forEach(card => card.classList.remove('flipped'));
+                this.isLocked = false;
+                this.startTimer();
+            }, 1500);
+        }
+
+        flipCard(card) {
+            if (this.isLocked) return;
+            if (card.classList.contains('flipped')) return;
+            if (card.classList.contains('matched')) return;
+            if (this.flippedCards.length >= 2) return;
+
+            card.classList.add('flipped');
+            this.flippedCards.push(card);
+
+            if (this.flippedCards.length === 2) {
+                this.moves++;
+                this.updateDisplay();
+                this.checkMatch();
+            }
+        }
+
+        checkMatch() {
+            const [card1, card2] = this.flippedCards;
+            const isMatch = card1.dataset.pairId === card2.dataset.pairId;
+
+            if (isMatch) {
+                this.handleMatch(card1, card2);
+            } else {
+                this.handleMismatch(card1, card2);
+            }
+        }
+
+        handleMatch(card1, card2) {
+            card1.classList.add('matched');
+            card2.classList.add('matched');
+            this.matchedPairs++;
+            this.flippedCards = [];
+            this.updateDisplay();
+
+            // Check for win
+            if (this.matchedPairs === this.totalPairs) {
+                setTimeout(() => this.handleWin(), 500);
+            }
+        }
+
+        handleMismatch(card1, card2) {
+            this.isLocked = true;
+
+            setTimeout(() => {
+                card1.classList.remove('flipped');
+                card2.classList.remove('flipped');
+                this.flippedCards = [];
+                this.isLocked = false;
+            }, 800);
+        }
+
+        startTimer() {
+            this.timer = setInterval(() => {
+                this.seconds++;
+                this.updateDisplay();
+            }, 1000);
+        }
+
+        stopTimer() {
+            if (this.timer) {
+                clearInterval(this.timer);
+                this.timer = null;
+            }
+        }
+
+        formatTime(seconds) {
+            const mins = Math.floor(seconds / 60);
+            const secs = seconds % 60;
+            return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+        }
+
+        updateDisplay() {
+            if (this.movesDisplay) this.movesDisplay.textContent = this.moves;
+            if (this.timeDisplay) this.timeDisplay.textContent = this.formatTime(this.seconds);
+            if (this.pairsDisplay) this.pairsDisplay.textContent = `${this.matchedPairs}/${this.totalPairs}`;
+        }
+
+        handleWin() {
+            this.stopTimer();
+
+            if (this.finalMoves) this.finalMoves.textContent = this.moves;
+            if (this.finalTime) this.finalTime.textContent = this.formatTime(this.seconds);
+
+            this.showScreen('win');
+            this.createConfetti();
+            // Emit a global event with the final score details
+            try {
+                window.dispatchEvent(new CustomEvent('mau:memory:win', {
+                    detail: {
+                        moves: this.moves,
+                        time: this.seconds,
+                        pairs: this.totalPairs
+                    }
+                }));
+            } catch (e) {
+                // ignore if CustomEvent is unsupported
+            }
+        }
+
+        createConfetti() {
+            const container = $('#confetti');
+            if (!container) return;
+
+            container.innerHTML = '';
+            const colors = ['#ff6b6b', '#feca57', '#48dbfb', '#ff9ff3', '#54a0ff'];
+
+            for (let i = 0; i < 50; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                confetti.style.cssText = `
+                    left: ${Math.random() * 100}%;
+                    background: ${colors[Math.floor(Math.random() * colors.length)]};
+                    animation-delay: ${Math.random() * 2}s;
+                    animation-duration: ${4 + Math.random() * 3}s;
+                `;
+                container.appendChild(confetti);
+
+                // Trigger animation
+                setTimeout(() => confetti.classList.add('active'), 10);
+            }
+        }
+
+        showScreen(screen) {
+            [this.startScreen, this.playingScreen, this.winScreen].forEach(s => {
+                if (s) s.classList.remove('active');
+            });
+
+            const targetScreen = {
+                'start': this.startScreen,
+                'playing': this.playingScreen,
+                'win': this.winScreen
+            }[screen];
+
+            if (targetScreen) targetScreen.classList.add('active');
+        }
+
+        resetGame() {
+            this.cards = [];
+            this.flippedCards = [];
+            this.matchedPairs = 0;
+            this.moves = 0;
+            this.seconds = 0;
+            this.isLocked = false;
+            this.stopTimer();
+        }
+
+        restartGame() {
+            this.showScreen('start');
+        }
+    }
+
+    // Initialize Memory Game
+    new MauMemoryGame();
+
+    // -----------------------------
+    // API: Views & Leaderboard
+    // -----------------------------
+    const visitsEl = $('#visits-count');
+    const leaderboardEl = $('#leaderboard');
+    const saveScoreBtn = $('#save-score-btn');
+    const scoreNameInput = $('#score-name');
+    let lastWin = null;
+
+    async function hitView() {
+        try {
+            const resp = await fetch('/api/hit');
+            if (resp.ok) {
+                const data = await resp.json();
+                if (visitsEl) visitsEl.textContent = `Views: ${data.visits}`;
+            }
+        } catch (e) {
+            // ignore
+        }
+    }
+
+    async function fetchViews() {
+        try {
+            const resp = await fetch('/api/views');
+            if (resp.ok) {
+                const data = await resp.json();
+                if (visitsEl) visitsEl.textContent = `Views: ${data.visits}`;
+            }
+        } catch (e) {
+            // ignore
+        }
+    }
+
+    async function loadLeaderboard() {
+        try {
+            const resp = await fetch('/api/scores?limit=10');
+            if (resp.ok) {
+                const rows = await resp.json();
+                if (!leaderboardEl) return;
+                leaderboardEl.innerHTML = '';
+                rows.forEach((r) => {
+                    const li = document.createElement('li');
+                    li.textContent = `${r.name} — ${r.moves} moves — ${r.time}s`;
+                    leaderboardEl.appendChild(li);
+                });
+            }
+        } catch (e) {
+            // ignore
+        }
+    }
+
+    async function saveScore(name, moves, time, pairs) {
+        try {
+            const resp = await fetch('/api/scores', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name, moves, time, pairs })
+            });
+            if (resp.ok) {
+                await loadLeaderboard();
+                return true;
+            }
+        } catch (e) {
+            // ignore
+        }
+        return false;
+    }
+
+    // Initially increment views once per page load
+    hitView();
+    // Fill visits and leaderboard
+    fetchViews();
+    loadLeaderboard();
+
+    // Listen to game win events
+    window.addEventListener('mau:memory:win', (e) => {
+        const detail = e.detail || {};
+        lastWin = detail;
+        // Pre-fill name input
+        if (scoreNameInput) scoreNameInput.value = '';
+        // Refresh leaderboard
+        loadLeaderboard();
+    });
+
+    if (saveScoreBtn) {
+        saveScoreBtn.addEventListener('click', async () => {
+            if (!lastWin) return;
+            const name = scoreNameInput?.value?.trim() || 'anon';
+            const ok = await saveScore(name, lastWin.moves, lastWin.time, lastWin.pairs);
+            if (ok) {
+                saveScoreBtn.textContent = 'Saved ✓';
+                setTimeout(() => saveScoreBtn.textContent = 'Save Score', 2000);
+            } else {
+                saveScoreBtn.textContent = 'Failed';
+                setTimeout(() => saveScoreBtn.textContent = 'Save Score', 2000);
+            }
+        });
+    }
+
 })();

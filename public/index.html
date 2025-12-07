@@ -38,11 +38,13 @@
       <div class="logo">
         <span class="logo-icon">🐾</span>
         <span class="logo-text">Mau</span>
+        <span id="visits-count" class="visits" title="Page views">Views: 0</span>
       </div>
       <nav>
         <a href="#about" data-hover="About">About</a>
         <a href="#qr" data-hover="Flow">Touch-me flow</a>
         <a href="#instagram" data-hover="Instagram">Instagram</a>
+        <a href="#memory" data-hover="Game">🎮 Memory</a>
         <a href="#website" data-hover="Website">Website need?</a>
         <a href="#repos" data-hover="Projects">Projects</a>
         <a href="#team" data-hover="Team">Team</a>
@@ -58,6 +60,7 @@
       <a href="#about">About</a>
       <a href="#qr">Touch-me flow</a>
       <a href="#instagram">Instagram</a>
+      <a href="#memory">🎮 Mau Memory</a>
       <a href="#website">Website need?</a>
       <a href="#repos">Projects</a>
       <a href="#team">Team</a>
@@ -269,6 +272,104 @@
         >
           @genossin_mau
         </a>
+      </section>
+
+      <!-- MAU MEMORY GAME -->
+      <section id="memory" class="card memory-section reveal">
+        <div class="card-glow"></div>
+        <h2>
+          <span class="section-number">03.5</span>
+          Mau Memory
+        </h2>
+        <p class="memory-intro">
+          You found this page via QR – now find the hidden Mau cards! A quick
+          30-second game before you head to Instagram.
+        </p>
+
+        <!-- Game Container -->
+        <div id="memory-game">
+          <!-- Start Screen -->
+          <div id="memory-start" class="memory-screen active">
+            <div class="memory-start-content">
+              <div class="memory-cat-icon">🐱</div>
+              <h3>Find all Mau pairs!</h3>
+              <p>
+                Flip the cards and match the Mau moments.<br />When you're done,
+                share a pic and tag @genossin_mau.
+              </p>
+              <button id="memory-start-btn" class="btn primary glow-btn">
+                <span class="btn-icon">🎮</span>
+                <span>Start Game</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Game Screen -->
+          <div id="memory-playing" class="memory-screen">
+            <div class="memory-stats">
+              <div class="memory-stat">
+                <span class="stat-label">Moves</span>
+                <span id="memory-moves" class="stat-value">0</span>
+              </div>
+              <div class="memory-stat">
+                <span class="stat-label">Time</span>
+                <span id="memory-time" class="stat-value">00:00</span>
+              </div>
+              <div class="memory-stat">
+                <span class="stat-label">Pairs</span>
+                <span id="memory-pairs" class="stat-value">0/0</span>
+              </div>
+            </div>
+            <div id="memory-grid" class="memory-grid">
+              <!-- Cards will be inserted here by JS -->
+            </div>
+          </div>
+
+          <!-- Win Screen -->
+          <div id="memory-win" class="memory-screen">
+            <div class="memory-win-content">
+              <div class="confetti-container" id="confetti"></div>
+              <div class="win-icon">🎉</div>
+              <h3>Nice, you found all Mau moments!</h3>
+              <p class="win-stats">
+                Completed in <span id="final-moves">0</span> moves and
+                <span id="final-time">00:00</span>
+              </p>
+              <p class="win-cta">
+                Now find the real one in Berlin: snap a picture, upload it and
+                tag @genossin_mau.
+              </p>
+              <div class="save-score">
+                <label for="score-name">Your name</label>
+                <input id="score-name" type="text" maxlength="32" placeholder="Anon" />
+                <button id="save-score-btn" class="btn primary glow-btn">Save Score</button>
+              </div>
+              <div class="leaderboard-wrap">
+                <h4>Leaderboard</h4>
+                <ul id="leaderboard" class="leaderboard"></ul>
+              </div>
+              <div class="memory-actions">
+                <a
+                  class="btn primary glow-btn"
+                  href="https://www.instagram.com/genossin_mau"
+                  target="_blank"
+                  rel="noopener"
+                >
+                  <span class="btn-icon">📸</span>
+                  <span>Open Instagram & tag @genossin_mau</span>
+                </a>
+                <a class="btn ghost" href="#website">
+                  <span class="btn-icon">💻</span>
+                  <span>Need a website? →</span>
+                </a>
+                <button id="memory-restart-btn" class="btn ghost">
+                  <span class="btn-icon">🔄</span>
+                  <span>Play Again</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
       </section>
 
       <!-- WEBSITE PROMO -->

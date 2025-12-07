@@ -3,7 +3,8 @@ import helmet from "helmet";
 import compression from "compression";
 import morgan from "morgan";
 import fetch from "node-fetch";
-import fs from "fs";
+// fs not used (left from previous file-based counter)
+import Database from "better-sqlite3";
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -11,31 +12,29 @@ const GITHUB_REPO = "habibidani/axia";
 const GITHUB_API = `https://api.github.com/repos/${GITHUB_REPO}`;
 const GITHUB_TOKEN = process.env.GITHUB_TOKEN || null;
 
-// === Simple pageview counter (file-based, no cookies) ===
-const COUNTER_FILE = process.env.COUNTER_FILE || "./counter.json";
-let visitCount = 0;
-
+// SQLite DB (persistent: ./data/mau.db)
+const DB_FILE = process.env.DB_FILE || "./data/mau.db";
+let db;
 try {
-  const raw = fs.readFileSync(COUNTER_FILE, "utf8");
-  visitCount = JSON.parse(raw).visits ?? 0;
-  // eslint-disable-next-line no-console
-  console.log(`[counter] Loaded ${visitCount} visits from ${COUNTER_FILE}`);
-} catch (e) {
-  visitCount = 0;
-  // eslint-disable-next-line no-console
-  console.log(`[counter] No existing counter file, starting at 0`);
-}
+  db = new Database(DB_FILE);
+  // Initialize tables
+  db.prepare(
+    `CREATE TABLE IF NOT EXISTS views (id INTEGER PRIMARY KEY CHECK (id = 1), visits INTEGER NOT NULL)`
+  ).run();
+  db.prepare(
+    `CREATE TABLE IF NOT EXISTS scores (id INTEGER PRIMARY KEY, name TEXT, moves INTEGER, time INTEGER, pairs INTEGER, created_at DATETIME DEFAULT CURRENT_TIMESTAMP)`
+  ).run();
 
-function persistCounter() {
-  fs.writeFile(
-    COUNTER_FILE,
-    JSON.stringify({ visits: visitCount }),
-    (err) => {
-      if (err) {
-        console.error("[counter] Failed to write counter file:", err);
-      }
-    }
-  );
+  // Ensure single row for views exists
+  const row = db.prepare(`SELECT COUNT(*) as c FROM views WHERE id = 1`).get();
+  if (!row || row.c === 0) {
+    db.prepare(`INSERT INTO views (id, visits) VALUES (1, 0)`).run();
+  }
+  // eslint-disable-next-line no-console
+  console.log(`[sqlite] DB opened at ${DB_FILE}`);
+} catch (e) {
+  console.error("Failed to open DB:", e);
+  process.exit(1);
 }
 
 // Basic security headers
@@ -54,6 +53,8 @@ app.use(
   })
 );
 
+// Parse JSON requests
+app.use(express.json());
 app.use(compression());
 app.use(morgan(process.env.NODE_ENV === "production" ? "combined" : "dev"));
 
@@ -63,13 +64,50 @@ app.use(express.static("public", { maxAge: "1h", etag: true }));
 // Health endpoint
 app.get("/health", (_req, res) => res.json({ status: "ok" }));
 
-// === Visitor counter API ===
-// Wird von der Startseite einmal bei Load aufgerufen.
-// Keine Cookies, keine IDs → reine anonyme Pageviews.
+// === Visitor counter API (SQLite) ===
 app.get("/api/hit", (_req, res) => {
-  visitCount++;
-  persistCounter();
-  res.json({ visits: visitCount });
+  try {
+    db.prepare(`UPDATE views SET visits = visits + 1 WHERE id = 1`).run();
+    const visit = db.prepare(`SELECT visits FROM views WHERE id = 1`).get();
+    res.json({ visits: visit.visits });
+  } catch (e) {
+    res.status(500).json({ error: "db_error" });
+  }
+});
+
+app.get("/api/views", (_req, res) => {
+  try {
+    const visit = db.prepare(`SELECT visits FROM views WHERE id = 1`).get();
+    res.json({ visits: visit.visits });
+  } catch (e) {
+    res.status(500).json({ error: "db_error" });
+  }
+});
+
+// Score endpoints
+app.post("/api/scores", (req, res) => {
+  const { name = "anonymous", moves, time, pairs } = req.body || {};
+  if (typeof moves !== "number" || typeof time !== "number" || typeof pairs !== "number") {
+    return res.status(400).json({ error: "invalid_payload" });
+  }
+  try {
+    const stmt = db.prepare(`INSERT INTO scores (name, moves, time, pairs) VALUES (?, ?, ?, ?)`);
+    const info = stmt.run(name, moves, time, pairs);
+    res.json({ id: info.lastInsertRowid });
+  } catch (e) {
+    res.status(500).json({ error: "db_error" });
+  }
+});
+
+app.get("/api/scores", (req, res) => {
+  const limit = Math.min(Math.max(parseInt(req.query.limit) || 10, 1), 100);
+  try {
+    // Order: fewer moves first, then lower time
+    const rows = db.prepare(`SELECT id, name, moves, time, pairs, created_at FROM scores ORDER BY moves ASC, time ASC LIMIT ?`).all(limit);
+    res.json(rows);
+  } catch (e) {
+    res.status(500).json({ error: "db_error" });
+  }
 });
 
 // In-memory cache for GitHub data (10 minutes)
