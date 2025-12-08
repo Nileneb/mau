@@ -3,7 +3,7 @@ import helmet from "helmet";
 import compression from "compression";
 import morgan from "morgan";
 import fetch from "node-fetch";
-// fs not used (left from previous file-based counter)
+import fs from 'fs';
 import Database from "better-sqlite3";
 
 const app = express();
@@ -111,22 +111,99 @@ app.get("/api/scores", (req, res) => {
 });
 
 // In-memory cache for GitHub data (10 minutes)
-let cache = { ts: 0, data: null };
+// Simple per-repo in-memory cache: { '<owner/repo>': { ts: number, data: object } }
+const cacheByRepo = {};
+const DEFAULT_WARM_REPOS = [
+  'Nileneb/SupportedGrowControl',
+  'Nileneb/growdash',
+  'habibidani/axia'
+];
+
+function parseWarmRepos() {
+  if (process.env.WARM_GITHUB_REPOS) {
+    return process.env.WARM_GITHUB_REPOS.split(',').map(s => s.trim()).filter(Boolean);
+  }
+  const repoFile = process.env.WARM_GITHUB_REPOS_FILE || './deploy/repos.txt';
+  try {
+    if (fs.existsSync(repoFile)) {
+      const content = fs.readFileSync(repoFile, 'utf8');
+      return content.split(/[\r\n]+/).map(s => s.trim()).filter(Boolean);
+    }
+  } catch (e) {
+    // ignore and fallback
+  }
+  return DEFAULT_WARM_REPOS;
+}
+
+async function warmCacheForRepo(repo) {
+  try {
+    const apiUrl = `https://api.github.com/repos/${repo}`;
+    const headers = {
+      "User-Agent": "mau-linn-games",
+      "Accept": "application/vnd.github+json"
+    };
+    if (GITHUB_TOKEN) headers.Authorization = `Bearer ${GITHUB_TOKEN}`;
+    const resp = await fetch(apiUrl, { headers });
+    if (!resp.ok) return null;
+    const data = await resp.json();
+    const slim = {
+      full_name: data.full_name,
+      html_url: data.html_url,
+      description: data.description,
+      stargazers_count: data.stargazers_count,
+      forks_count: data.forks_count,
+      open_issues_count: data.open_issues_count,
+      license: data.license?.spdx_id || null,
+      pushed_at: data.pushed_at
+    };
+    cacheByRepo[repo] = { ts: Date.now(), data: slim };
+    console.log(`[warm] Cached ${repo}`);
+    return slim;
+  } catch (e) {
+    console.warn(`[warm] Failed to warm ${repo}:`, e && e.message);
+    return null;
+  }
+}
+
+async function warmInitialCache() {
+  const repos = parseWarmRepos();
+  if (!repos || repos.length === 0) return;
+  const concurrency = 3;
+  const q = [...repos];
+  const workers = Array.from({ length: Math.min(concurrency, q.length) }, async () => {
+    while (q.length) {
+      const repo = q.shift();
+      if (!repo) break;
+      await warmCacheForRepo(repo);
+    }
+  });
+  await Promise.all(workers);
+}
 const TEN_MIN = 10 * 60 * 1000;
 
-app.get("/api/github", async (_req, res) => {
+app.get("/api/github", async (req, res) => {
   try {
-    const now = Date.now();
-    if (cache.data && now - cache.ts < TEN_MIN) {
-      return res.json(cache.data);
+    const repo = String(req.query.repo || GITHUB_REPO).trim();
+
+    // Basic validation to avoid SSRF / unwanted URLs - only allow owner/repo
+    if (!/^[a-zA-Z0-9_.-]+\/[a-zA-Z0-9_.-]+$/.test(repo)) {
+      return res.status(400).json({ error: "invalid_repo" });
     }
+
+    const now = Date.now();
+    const cached = cacheByRepo[repo];
+    if (cached && now - cached.ts < TEN_MIN) {
+      return res.json(cached.data);
+    }
+
+    const apiUrl = `https://api.github.com/repos/${repo}`;
     const headers = {
       "User-Agent": "mau-linn-games",
       "Accept": "application/vnd.github+json"
     };
     if (GITHUB_TOKEN) headers.Authorization = `Bearer ${GITHUB_TOKEN}`;
 
-    const resp = await fetch(GITHUB_API, { headers });
+    const resp = await fetch(apiUrl, { headers });
     if (!resp.ok) {
       return res.status(resp.status).json({ error: "github_fetch_failed" });
     }
@@ -141,7 +218,8 @@ app.get("/api/github", async (_req, res) => {
       license: data.license?.spdx_id || null,
       pushed_at: data.pushed_at
     };
-    cache = { ts: now, data: slim };
+
+    cacheByRepo[repo] = { ts: now, data: slim };
     res.json(slim);
   } catch (e) {
     res.status(500).json({ error: "server_error" });
@@ -153,6 +231,12 @@ app.get("*", (_req, res) => {
   res.sendFile(process.cwd() + "/public/index.html");
 });
 
-app.listen(PORT, () => {
+app.listen(PORT, async () => {
   console.log(`mau.linn.games listening on http://0.0.0.0:${PORT}`);
+  try {
+    await warmInitialCache();
+    console.log('[warm] Initial cache warmed');
+  } catch (e) {
+    console.warn('[warm] Initial cache warm failed', e && e.message);
+  }
 });

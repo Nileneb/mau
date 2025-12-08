@@ -381,6 +381,47 @@
         });
     }
 
+    // Compact images toggle (tiny images for low-bandwidth mobile)
+    const COMPACT_CLASS = 'compact-images';
+    const compactToggle = document.getElementById('compact-toggle');
+    function isCompact() { return document.body.classList.contains(COMPACT_CLASS); }
+    function getImageSizes() {
+        return isCompact() ? '28px' : '(max-width: 600px) 33vw, 25vw';
+    }
+    if (compactToggle) {
+        compactToggle.addEventListener('click', () => {
+            const cur = isCompact();
+            document.body.classList.toggle(COMPACT_CLASS, !cur);
+            compactToggle.setAttribute('aria-pressed', String(!cur));
+            compactToggle.textContent = !cur ? 'Compact images (on)' : 'Compact images';
+            // Re-render the current cards so sizes attribute and layout refresh
+            try {
+                if (window.MauMemoryGameInstance) {
+                    window.MauMemoryGameInstance.resetGame();
+                    window.MauMemoryGameInstance.startGame();
+                }
+            } catch (e) {
+                // ignore
+            }
+        });
+    }
+
+    // VARIANTS manifest loader — if present, this maps original filenames to size-folder paths.
+    window.MauVariantMap = null;
+    async function loadVariants() {
+        try {
+            const res = await fetch('/images/cat/variants.json', { cache: 'no-cache' });
+            if (!res.ok) throw new Error('No variants manifest');
+            window.MauVariantMap = await res.json();
+            console.info('Loaded image variants manifest with', Object.keys(window.MauVariantMap).length, 'entries');
+        } catch (e) {
+            // variants.json not present: it will fall back to suffix-based generations
+            console.info('No variants manifest found, using suffix-based paths.');
+        }
+    }
+    // Start loading in the background
+    loadVariants();
+
     // ============================================
     // SMOOTH SCROLL
     // ============================================
@@ -446,7 +487,8 @@
                 const controller = new AbortController();
                 const timeoutId = setTimeout(() => controller.abort(), CONFIG.repoFetchTimeout);
 
-                const response = await fetch(`https://api.github.com/repos/${repoPath}`, {
+                // Prefer server-side endpoint to avoid CORS & rate-limit issues. Falls back to direct GitHub API if server returns error.
+                let response = await fetch(`/api/github?repo=${encodeURIComponent(repoPath)}`, {
                     signal: controller.signal,
                     headers: {
                         'Accept': 'application/vnd.github.v3+json'
@@ -455,7 +497,19 @@
 
                 clearTimeout(timeoutId);
 
-                if (!response.ok) throw new Error('API error');
+                if (!response.ok) {
+                    // Attempt fallback to direct GitHub API only if server call fails (e.g., returns a 4xx/5xx)
+                    try {
+                        const fallbackResp = await fetch(`https://api.github.com/repos/${repoPath}`, {
+                            signal: controller.signal,
+                            headers: { 'Accept': 'application/vnd.github.v3+json' }
+                        });
+                        if (!fallbackResp.ok) throw new Error('API error');
+                        response = fallbackResp; // reassign for downstream json() call
+                    } catch (fallbackErr) {
+                        throw new Error('API error');
+                    }
+                }
 
                 const data = await response.json();
 
@@ -777,11 +831,58 @@
             front.className = 'memory-card-face memory-card-front';
 
             if (cardData.type === 'image') {
+                const picture = document.createElement('picture');
+                const sourceWebp = document.createElement('source');
+                const sourceJpeg = document.createElement('source');
                 const img = document.createElement('img');
-                img.src = cardData.content;
-                img.alt = 'Mau the cat';
+                // Derive variant paths; prefer manifest if available
+                const filename = cardData.content.split('/').pop();
+                let webp28, webp56, webp128, webp256, webp512;
+                let jpeg28, jpeg56, jpeg128, jpeg256, jpeg512;
+                if (window.MauVariantMap && window.MauVariantMap[filename]) {
+                    const v = window.MauVariantMap[filename];
+                    webp28 = v['28']?.webp || cardData.content.replace(/\.(jpe?g|png)$/i, '-28.webp');
+                    webp56 = v['56']?.webp || cardData.content.replace(/\.(jpe?g|png)$/i, '-56.webp');
+                    webp128 = v['128']?.webp || cardData.content.replace(/\.(jpe?g|png)$/i, '-128.webp');
+                    webp256 = v['256']?.webp || cardData.content.replace(/\.(jpe?g|png)$/i, '-256.webp');
+                    webp512 = v['512']?.webp || cardData.content.replace(/\.(jpe?g|png)$/i, '-512.webp');
+
+                    jpeg28 = v['28']?.jpg || cardData.content.replace(/\.(jpe?g|png)$/i, '-28.jpg');
+                    jpeg56 = v['56']?.jpg || cardData.content.replace(/\.(jpe?g|png)$/i, '-56.jpg');
+                    jpeg128 = v['128']?.jpg || cardData.content.replace(/\.(jpe?g|png)$/i, '-128.jpg');
+                    jpeg256 = v['256']?.jpg || cardData.content.replace(/\.(jpe?g|png)$/i, '-256.jpg');
+                    jpeg512 = v['512']?.jpg || cardData.content.replace(/\.(jpe?g|png)$/i, '-512.jpg');
+                } else {
+                    webp28 = cardData.content.replace(/\.(jpe?g|png)$/i, '-28.webp');
+                    webp56 = cardData.content.replace(/\.(jpe?g|png)$/i, '-56.webp');
+                    webp128 = cardData.content.replace(/\.(jpe?g|png)$/i, '-128.webp');
+                    webp256 = cardData.content.replace(/\.(jpe?g|png)$/i, '-256.webp');
+                    webp512 = cardData.content.replace(/\.(jpe?g|png)$/i, '-512.webp');
+
+                    jpeg28 = cardData.content.replace(/\.(jpe?g|png)$/i, '-28.jpg');
+                    jpeg56 = cardData.content.replace(/\.(jpe?g|png)$/i, '-56.jpg');
+                    jpeg128 = cardData.content.replace(/\.(jpe?g|png)$/i, '-128.jpg');
+                    jpeg256 = cardData.content.replace(/\.(jpe?g|png)$/i, '-256.jpg');
+                    jpeg512 = cardData.content.replace(/\.(jpe?g|png)$/i, '-512.jpg');
+                }
+                sourceWebp.type = 'image/webp';
+                sourceWebp.srcset = `${webp28} 28w, ${webp56} 56w, ${webp128} 128w, ${webp256} 256w, ${webp512} 512w`;
+                // card is 33vw on mobile and 25vw on desktop; let the browser pick optimal size
+                sourceWebp.sizes = getImageSizes();
+                // JPEG fallback for browsers that don't support WebP
+                sourceJpeg.type = 'image/jpeg';
+                sourceJpeg.srcset = `${jpeg28} 28w, ${jpeg56} 56w, ${jpeg128} 128w, ${jpeg256} 256w, ${jpeg512} 512w`;
+                sourceJpeg.sizes = getImageSizes();
+                img.srcset = `${jpeg28} 28w, ${jpeg56} 56w, ${jpeg128} 128w, ${jpeg256} 256w, ${jpeg512} 512w`;
+                img.sizes = getImageSizes();
+                img.src = jpeg128; // fallback to reasonable jpeg
                 img.loading = 'lazy';
-                front.appendChild(img);
+                img.decoding = 'async';
+                picture.appendChild(sourceWebp);
+                picture.appendChild(sourceJpeg);
+                picture.appendChild(img);
+                img.alt = 'Mau the cat';
+                front.appendChild(picture);
             } else {
                 front.classList.add('icon-card');
                 front.textContent = cardData.content;
@@ -983,7 +1084,8 @@
     }
 
     // Initialize Memory Game
-    new MauMemoryGame();
+    const mauGameInstance = new MauMemoryGame();
+    window.MauMemoryGameInstance = mauGameInstance;
 
     // -----------------------------
     // API: Views & Leaderboard

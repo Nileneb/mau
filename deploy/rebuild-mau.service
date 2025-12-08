@@ -1,0 +1,14 @@
+[Unit]
+Description=Rebuild & restart mau docker-compose app
+After=network.target docker.service
+Requires=docker.service
+
+[Service]
+Type=oneshot
+WorkingDirectory=/home/nileneb/mau
+ExecStart=/home/nileneb/mau/deploy/rebuild-mau.sh
+User=root
+Group=root
+
+[Install]
+WantedBy=multi-user.target

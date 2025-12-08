@@ -20,7 +20,7 @@
     <meta property="og:url" content="https://mau.linn.games/" />
     <meta name="twitter:card" content="summary_large_image" />
 
-    <link rel="icon" href="/favicon.ico" />
+    <link rel="icon" type="image/x-icon" href="/images/cat/Favicon/Favicon.ico" />
     <link rel="preconnect" href="https://avatars.githubusercontent.com" />
     <link rel="stylesheet" href="/styles.css" />
   </head>
@@ -50,6 +50,9 @@
         <a href="#team" data-hover="Team">Team</a>
         <a href="#legal" data-hover="Legal">Legal</a>
       </nav>
+      <div class="nav-controls">
+        <button id="compact-toggle" class="btn ghost compact-toggle" aria-pressed="false">Compact images</button>
+      </div>
       <button class="menu-toggle" aria-label="Toggle menu">
         <span></span><span></span><span></span>
       </button>
@@ -152,11 +155,12 @@
       </section>
 
       <!-- QR FLOW -->
+            <!-- QR FLOW -->
       <section id="qr" class="card reveal">
         <div class="card-glow"></div>
         <h2>
           <span class="section-number">02</span>
-          "Touch-me" question flow
+          "Touch-me" decision tree
         </h2>
         <p class="subtitle">
           I am a street cat. For my safety (and your hygiene) the answer is
@@ -169,39 +173,165 @@
           <div class="flow-step active" data-step="1">
             <div class="flow-card">
               <p class="flow-question">
-                <strong>Do you want to pet me in real life?</strong>
+                <strong>First things first: do we even know each other?</strong>
+              </p>
+              <p class="flow-note">
+                (Have we met before or did you just spot a very cute cat / backpack?)
               </p>
               <div class="flow-actions">
-                <button class="btn primary glow-btn" data-next="end">
-                  I respect your boundaries 🧼
+                <button class="btn primary glow-btn" data-next="2">
+                  We‘re basically best friends
                 </button>
-                <button class="btn ghost" data-next="end">
-                  I really want to… but I'll behave 🙅
+                <button class="btn ghost" data-next="2">
+                  I just met this QR and a mysterious cat
                 </button>
               </div>
             </div>
           </div>
 
-          <!-- FINAL STEP -->
+          <!-- STEP 2: consent -->
+          <div class="flow-step" data-step="2">
+            <div class="flow-card">
+              <p class="flow-question">
+                <strong>Did a human clearly say “yes, please pet this cat”?</strong>
+              </p>
+              <p class="flow-note">
+                Hint: Silence, vibes or “but she’s sooo soft” are not consent.
+              </p>
+              <div class="flow-actions">
+                <button class="btn primary glow-btn" data-next="3">
+                  Yes, clearly and explicitly
+                </button>
+                <button class="btn ghost" data-next="end">
+                  Not really / I guessed / The cat looked fluffer-than-average
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- STEP 3: health -->
+          <div class="flow-step" data-step="3">
+            <div class="flow-card">
+              <p class="flow-question">
+                <strong>Health check: are you cat-safe?</strong>
+              </p>
+              <ul class="flow-list">
+                <li>No heavy cat allergy</li>
+                <li>You’re up to date with basic vaccines (like tetanus)</li>
+                <li>No open wounds you plan to introduce to Team Claws™</li>
+              </ul>
+              <div class="flow-actions">
+                <button class="btn primary glow-btn" data-next="4">
+                  Yes, I am a medically boring human
+                </button>
+                <button class="btn ghost" data-next="end">
+                  Uhm… I sneeze when I think about fur
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- STEP 4: cat mood -->
+          <div class="flow-step" data-step="4">
+            <div class="flow-card">
+              <p class="flow-question">
+                <strong>Look at Mau, not your feelings: how does the cat look?</strong>
+              </p>
+              <ul class="flow-list">
+                <li>Relaxed ears, normal breathing, no tail helicopter?</li>
+                <li>Not hiding, not frozen, not clinging to their human?</li>
+              </ul>
+              <div class="flow-actions">
+                <button class="btn primary glow-btn" data-next="5">
+                  Relaxed, curious, maybe a little judgy (normal cat)
+                </button>
+                <button class="btn ghost" data-next="end">
+                  Unsure / stressed / zoomies / “tiny dragon” mode
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- STEP 5: environment -->
+          <div class="flow-step" data-step="5">
+            <div class="flow-card">
+              <p class="flow-question">
+                <strong>What about the environment around you?</strong>
+              </p>
+              <p class="flow-note">
+                Busy street? Party? Children screaming “KITTY!!”? Loud music? Heavy traffic?
+              </p>
+              <div class="flow-actions">
+                <button class="btn primary glow-btn" data-next="6">
+                  It’s calm. Library energy. Plants are thriving.
+                </button>
+                <button class="btn ghost" data-next="end">
+                  Chaos, noise or “festival mode” activated
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- STEP 6: hygiene / smell -->
+          <div class="flow-step" data-step="6">
+            <div class="flow-card">
+              <p class="flow-question">
+                <strong>Hand check: would you lick your own fingers right now?</strong>
+              </p>
+              <p class="flow-note">
+                Strong perfume, sanitizer smell, street-food fingers? Cats have a tiny, sensitive nose and zero interest in eau de kebab.
+              </p>
+              <div class="flow-actions">
+                <button class="btn primary glow-btn" data-next="7">
+                  Yes, freshly washed & no chemical cloud
+                </button>
+                <button class="btn ghost" data-next="end">
+                  Honestly… no, my hands are a side quest
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- STEP 7: ego vs cat -->
+          <div class="flow-step" data-step="7">
+            <div class="flow-card">
+              <p class="flow-question">
+                <strong>Final boss: are you okay with NOT touching the cat anyway?</strong>
+              </p>
+              <p class="flow-note">
+                Real cat lovers prove it by respecting boundaries, not by collecting pets like achievements.
+              </p>
+              <div class="flow-actions">
+                <button class="btn primary glow-btn" data-next="end-soft">
+                  Yes. I can admire without grabbing. I am powerful.
+                </button>
+                <button class="btn ghost" data-next="end">
+                  But… but… the floof…
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- HARD NO END -->
           <div class="flow-step" data-step="end">
-            <div class="flow-card success">
-              <div class="success-icon">✨</div>
+            <div class="flow-card warning">
+              <div class="success-icon">🚫</div>
               <p class="warn">
-                Thank you. <strong>No real-life touching.</strong> Observe me
-                from a respectful distance, then:
+                Today the verdict is: <strong>No real-life touching.</strong>
+              </p>
+              <p>
+                That’s not a fail – that’s <strong>top-tier cat respect</strong>.  
+                Crowds, allergies, stress or just “no clear consent” = paws off.
               </p>
               <ul class="action-list">
                 <li>
-                  <span class="step-num">1</span> Snap a picture of the cat, QR
-                  or backpack
+                  <span class="step-num">1</span> Snap a picture of the QR / backpack / situation (not a stressed cat).
                 </li>
                 <li>
-                  <span class="step-num">2</span> Upload it to your story or
-                  post
+                  <span class="step-num">2</span> Upload it to your story or post.
                 </li>
                 <li>
-                  <span class="step-num">3</span> Tag
-                  <code>@genossin_mau</code> on Instagram
+                  <span class="step-num">3</span> Tag <code>@genossin_mau</code> on Instagram.
                 </li>
               </ul>
               <div class="flow-actions">
@@ -214,9 +344,56 @@
                   📲 Upload & tag @genossin_mau
                 </a>
                 <a class="btn ghost" href="#website">
-                  💻 Need a website? Click here
+                  💻 Need a website? Talk to my humans
                 </a>
               </div>
+              <p class="muted" style="margin-top:0.75rem">
+                Bonus question: <strong>Do you already follow & tag us?</strong>  
+                If not: this is your sign. The cat said so.
+              </p>
+            </div>
+          </div>
+
+          <!-- SOFT NO END (everything ok, but still no touch) -->
+          <div class="flow-step" data-step="end-soft">
+            <div class="flow-card success">
+              <div class="success-icon">✨</div>
+              <p class="warn">
+                You passed all checks – and <strong>still</strong> the answer is:
+                <strong>please don’t touch Mau.</strong>
+              </p>
+              <p>
+                Why? Because this campaign is about <strong>consent, distance and street-cat safety</strong>.  
+                The highest form of love is: letting the cat just exist and be admired from afar.
+              </p>
+              <ul class="action-list">
+                <li>
+                  <span class="step-num">1</span> Snap a picture of the QR, sticker or backpack.
+                </li>
+                <li>
+                  <span class="step-num">2</span> Post it and tag <code>@genossin_mau</code>.
+                </li>
+                <li>
+                  <span class="step-num">3</span> Optional: tell the internet you are a <em>certified non-petter</em>.
+                </li>
+              </ul>
+              <div class="flow-actions">
+                <a
+                  class="btn primary glow-btn"
+                  href="https://www.instagram.com/genossin_mau"
+                  target="_blank"
+                  rel="noopener"
+                >
+                  📲 Upload & tag @genossin_mau
+                </a>
+                <a class="btn ghost" href="#website">
+                  💻 Also: need a website?
+                </a>
+              </div>
+              <p class="muted" style="margin-top:0.75rem">
+                Final check: <strong>Already tagged us on Insta and visited our website?</strong>  
+                If not, your quest continues below. No pets, only pixels. 🐾
+              </p>
             </div>
           </div>
         </div>
@@ -488,6 +665,11 @@
                 >
                   growdash
                 </a>
+                <a class="repo-demo" href="https://grow.linn.games" target="_blank" rel="noopener noreferrer" title="Open demo — grow.linn.games" aria-label="Open demo for growdash">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false">
+                    <path fill="currentColor" d="M14 3h7v7h-2V6.41l-9.29 9.3-1.42-1.42 9.3-9.29H14V3zM5 5h5V3H3v7h2V5zm0 14v-5H3v7h7v-2H5zm14 0h-5v2h7v-7h-2v5z"/>
+                  </svg>
+                </a>
                 <span class="repo-author">Nileneb</span>
               </div>
             </div>
@@ -532,6 +714,11 @@
                   rel="noopener"
                 >
                   axia
+                </a>
+                <a class="repo-demo" href="https://www.getaxia.de" target="_blank" rel="noopener noreferrer" title="Open demo — getaxia.de" aria-label="Open demo for axia">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false">
+                    <path fill="currentColor" d="M14 3h7v7h-2V6.41l-9.29 9.3-1.42-1.42 9.3-9.29H14V3zM5 5h5V3H3v7h2V5zm0 14v-5H3v7h7v-2H5zm14 0h-5v2h7v-7h-2v5z"/>
+                  </svg>
                 </a>
                 <span class="repo-author">habibidani</span>
               </div>

@@ -6,7 +6,10 @@
   "type": "module",
   "scripts": {
     "start": "node server.js",
-    "dev": "NODE_ENV=development node server.js"
+    "dev": "NODE_ENV=development node server.js",
+    "images:convert": "node scripts/convert-images.js",
+    "images:clean": "node scripts/clean-converted.js",
+    "images:regen": "node scripts/clean-converted.js --force && node scripts/convert-images.js"
   },
   "dependencies": {
     "compression": "^1.7.4",
@@ -14,6 +17,7 @@
     "helmet": "^7.1.0",
     "morgan": "^1.10.0",
     "node-fetch": "^3.3.2",
-    "better-sqlite3": "^8.2.0"
+    "better-sqlite3": "^8.2.0",
+    "sharp": "^0.32.6"
   }
 }

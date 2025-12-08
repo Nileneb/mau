@@ -2,7 +2,7 @@
 FROM node:20-alpine
 
 # System: curl für Healthcheck optional
-RUN apk add --no-cache curl python3 make g++ sqlite-dev su-exec
+RUN apk add --no-cache curl python3 make g++ sqlite-dev su-exec vips-dev vips-tools
 
 # Arbeitsverzeichnis
 WORKDIR /app
@@ -18,10 +18,13 @@ RUN npm install --omit=dev
 COPY server.js ./server.js
 COPY public ./public
 COPY docker-entrypoint.sh ./docker-entrypoint.sh
+COPY scripts ./scripts
+COPY deploy ./deploy
 
 # Create data dir and ensure app user owns it
 RUN mkdir -p /app/data && chown -R node:node /app/data
 RUN chmod +x /app/docker-entrypoint.sh
+RUN chmod +x /app/deploy/*.sh || true
 
 # Non-root
 # Runtime as root but entrypoint will switch to node using su-exec

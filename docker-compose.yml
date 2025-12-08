@@ -6,8 +6,13 @@ services:
     ports:
       - "5500:3000"              # Host:Container
     restart: always
+    # Using a named volume avoids host permission issues. If you instead want to map a host folder,
+    # uncomment the bind mount below and set PUID/PGID appropriately.
     volumes:
-      - ./data:/app/data
+      - mau-data:/app/data
+      # - ./data:/app/data
+    
+    
     environment:
       - NODE_ENV=production
       - PORT=3000
@@ -19,3 +24,17 @@ services:
       timeout: 3s
       retries: 3
       start_period: 10s
+
+  warm-cache:
+    build: .
+    container_name: mau-warm-cache
+    depends_on:
+      - mau
+    restart: always
+    volumes:
+      - mau-data:/app/data
+    command: /bin/sh -c "while true; do HOST=http://mau:3000 /app/deploy/warm-cache.sh; sleep 3600; done"
+
+volumes:
+  mau-data:
+    driver: local
